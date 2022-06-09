@@ -1,6 +1,12 @@
 let map;
 let slider;
-let selectedYear = 2022;
+let selectedYear = 2020;
+let pointLayer;
+let geoJson = {
+    type: "FeatureCollection",
+    name: "storyData",
+    features: []
+};
 
 function createMap(){
     //create basemap
@@ -44,38 +50,65 @@ function createSlider(){
     slider.oninput = function () {
         selectedYear = this.value;
         sliderOutput.innerHTML = selectedYear;
+        updateData();
     };
 };
 
 //function to retrieve the data and place it on the map
 function getData(){
-    //load the cheetah data
-    fetch("data/testData.geojson")
-    .then(function(response){
-        return response.json();
+    Papa.parse('data/storyData.csv', {
+        download: true,
+        header: true,
+        complete: results => {
+            results.data.forEach(function(data){
+               if(data.timelineStart && data.timelineEnd){
+                   let feature = {}
+                   feature.type = "Feature";
+                   feature.properties = {};
+                   feature.geometry = {
+                       type: "Point",
+                       coordinates: [parseFloat(data.Longitude), parseFloat(data.Latitude)]
+                   };
+                   for (const property in data){
+                       feature.properties[property] = data[property];
+                   }
+                geoJson.features.push(feature)
+               }
+            });
+            addData();
+        }
+    })
+};
+
+function addData(){
+    pointLayer = L.geoJson(geoJson,{
+        onEachFeature:function(feature, layer){
+        }
     }).addTo(map)
-    .then(function(json){
-        //create an attributes array
-        let attributes = processData(json);
-        //create the symbols
-        //createSymbols(json, attributes);
-    });
 };
 
-//build an attributes array from the data
-function processData(data){
-    //empty array to hold attributes
-    let attributes = [];
+function updateData(){
+    if (pointLayer){
+        map.removeLayer(pointLayer)
+    }
 
-    //properties of the first feature in the dataset
-    let properties = data.features[0].properties;
-
-    //push each attribute name into attributes array
-    for (let attribute in properties){
-        attributes.push(attribute);
-        };
-
-    return attributes;
+    pointLayer = null;
+    
+    pointLayer = L.geoJson(geoJson,{
+        onEachFeature:function(feature, layer){
+        },
+        filter:function(feature){
+            if (feature.properties.timelineStart <= selectedYear && (feature.properties.timelineEnd >= selectedYear))
+                return true
+            else
+                return false
+        }
+    }).addTo(map)
 };
 
-document.addEventListener('DOMContentLoaded',createMap)
+function setMapMarkers(){
+
+};
+
+
+document.addEventListener('DOMContentLoaded',createMap);
