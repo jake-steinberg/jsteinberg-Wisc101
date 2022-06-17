@@ -20,30 +20,19 @@ function createMap(){
     //create basemap
     map = L.map('wisc-101-map', {
     center: [44.605, -89.865],
-    zoom: 6,
-    minZoom: 5,
+    zoom: 7,
+    minZoom: 7,
     scrollWheelZoom: false,
+    maxBounds: [
+        [48, -96],
+        [41, -83]
+        ]
     });
 
     //add the basemap layer
-    L.tileLayer('https://api.mapbox.com/styles/v1/jakesteinberg/ck0i9rn690a6r1cqpjs37sokh.html?title=copy&access_token=pk.eyJ1IjoiamFrZXN0ZWluYmVyZyIsImEiOiJjanVtbzhwa2kxNTlsM3ltcXA0aGtiMDliIn0.2Q6HfVv2bholtzkLAhhHnw&zoomwheel=true&fresh=true#4.75/44.74/-88.85', {
+    L.tileLayer('https://api.mapbox.com/styles/v1/jakesteinberg/ck0i9rn690a6r1cqpjs37sokh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamFrZXN0ZWluYmVyZyIsImEiOiJjanVtbzhwa2kxNTlsM3ltcXA0aGtiMDliIn0.2Q6HfVv2bholtzkLAhhHnw', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/wisc101',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'pk.eyJ1IjoiamFrZXN0ZWluYmVyZyIsImEiOiJjanVtbzhwa2kxNTlsM3ltcXA0aGtiMDliIn0.2Q6HfVv2bholtzkLAhhHnw'
-    }).addTo(map);
-
-    //add attribution
-    let openStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '<a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
-    }).addTo(map);
-
-    //add Wisconsin state boundary
-    let wiscGeojson = L.geoJson(wiscBoundary, {
-        style: {color: 'black', weight: '.7', fillOpacity: 0, interactive: false}
+        subdomains: 'abcd'
     }).addTo(map);
 
     //create the slider filter
