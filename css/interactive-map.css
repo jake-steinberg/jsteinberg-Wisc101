@@ -1,3 +1,9 @@
+@font-face {
+    font-family: Montserrat;
+    src: url("lib/Montserrat-VariableFont_wght.ttf") format(ttf);
+    font-style: normal;
+}
+
 .wisc-101-map-container {
     display: block;
     width: calc(100vw - 400px);
@@ -28,6 +34,7 @@
   }*/
 
 .slider-container {
+    font-family: Montserrat !important;
     position: relative;
     bottom: 96px;
     left: 0;
