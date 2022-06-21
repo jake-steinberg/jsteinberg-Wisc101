@@ -118,7 +118,6 @@ function popUpContent(properties){
                       "<p style='width: 100%; text-align: center'><a href='" + properties['Permanent Link'] + "'>View Story</a></p>"
     };
 
-
 //function to filter the data based on the slider position
 function updateData(){
     //removes story data points from map in order to re-add them
