@@ -1,3 +1,11 @@
+/*
+1. if 'Story Type' != 'Object', do not add to map
+2. create variable relatedContent in onEachFeature function
+3. assign relatedContent array of features where 'Content' == the selected feature
+4. for each of the features in relatedContent, extract feature.properties['History'] and feature.properties['Permenant Link']
+5. in popUpContent, place the name and link to each relatedContent feature
+*/
+
 let map;
 let slider;
 let selectedYear = 2020;
@@ -89,18 +97,26 @@ function getData(){
     })
 };
 
+function drawCondition(data){
+    if(data['Story Type'] == 'Object'){
+        return [parseFloat(data.Longitude), parseFloat(data.Latitude)]
+    } else {
+        return null, null
+   };
+}
+
 //function to add data to the map
 function addData(){
     pointLayer = L.geoJson(geoJson,{
         onEachFeature:function(feature, layer){
             return onEachFeature(feature, layer)
         }
-    })
-    .addTo(map);
+    }).addTo(map);
 };
 
 //function to bind popups to points
 function onEachFeature(feature, layer){
+
     //create new popup content
     var popupContent = new popUpContent(feature.properties);
 
@@ -114,9 +130,12 @@ function onEachFeature(feature, layer){
 //fucntion to define the pop up content
 function popUpContent(properties){
     this.properties = properties;
-    this.formatted  = "<p><b>" + properties.History + "</b></p>" + 
-                      "<p style='width: 100%; text-align: center'><a href='" + properties['Permanent Link'] + "'>View Story</a></p>"
-    };
+    this.formatted  = "<p><b>" + properties.Clusters + "</b></p>" + 
+                      "<p style='width: 100%; text-align: center'>image url goes here</p>" +
+                      "<p style='width: 100%; text-align: center'><a href='" + properties['Permanent Link'] + "'>View Story</a></p>" +
+                      "<p style='width: 100%; text-align: center'><b>Related Stories</b></p>" +
+                      "<p>" + properties['Story Type'] + "</p>"
+                    };
 
 //function to filter the data based on the slider position
 function updateData(){
