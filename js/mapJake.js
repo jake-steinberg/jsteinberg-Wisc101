@@ -1,11 +1,3 @@
-/*
-1. if 'Story Type' != 'Object', do not add to map
-2. create variable relatedContent in onEachFeature function
-3. assign relatedContent array of features where 'Content' == the selected feature
-4. for each of the features in relatedContent, extract feature.properties['History'] and feature.properties['Permenant Link']
-5. in popUpContent, place the name and link to each relatedContent feature
-*/
-
 let map;
 let slider;
 let selectedYear = 2020;
@@ -32,7 +24,7 @@ function createMap(){
     minZoom: 7,
     scrollWheelZoom: false,
     maxBounds: [
-        [48, -96],
+        [50, -96],
         [41, -83]
         ]
     });
@@ -97,28 +89,38 @@ function getData(){
     })
 };
 
-function drawCondition(data){
-    if(data['Story Type'] == 'Object'){
-        return [parseFloat(data.Longitude), parseFloat(data.Latitude)]
-    } else {
-        return null, null
-   };
-}
-
 //function to add data to the map
 function addData(){
     pointLayer = L.geoJson(geoJson,{
         onEachFeature:function(feature, layer){
             return onEachFeature(feature, layer)
-        }
+        },
+    //filter out those without map markers
+    filter: function(feature){
+        if (feature.properties['Map Marker'] == 'TRUE') 
+        return true
+    } 
     }).addTo(map);
 };
 
 //function to bind popups to points
 function onEachFeature(feature, layer){
 
+    //declare array for related content
+    let relatedContent = []
+
+    //match up features with the same Cluster name and different History names
+    geoJson.features.forEach(function(object){
+        if (object.properties.Clusters == feature.properties.Clusters && object.properties.History != feature.properties.History){
+            //creates link format for pop up
+            let link = '<a class="link" href="'+ object.properties['Permanent Link'] + '">'+ object.properties['History'] +'</a>'
+            //pushes to array
+            relatedContent.push(link)
+        };
+    });
+
     //create new popup content
-    var popupContent = new popUpContent(feature.properties);
+    var popupContent = new popUpContent(feature.properties, relatedContent);
 
     //bind the popup to the  marker    
     layer.bindPopup(popupContent.formatted);
@@ -128,14 +130,21 @@ function onEachFeature(feature, layer){
 };
 
 //fucntion to define the pop up content
-function popUpContent(properties){
+function popUpContent(properties, related){
     this.properties = properties;
-    this.formatted  = "<p><b>" + properties.Clusters + "</b></p>" + 
+    this.formatted  = "<h2 style='width: 100%; text-align: center'>" + properties.Clusters + "</h2>" + 
                       "<p style='width: 100%; text-align: center'>image url goes here</p>" +
-                      "<p style='width: 100%; text-align: center'><a href='" + properties['Permanent Link'] + "'>View Story</a></p>" +
-                      "<p style='width: 100%; text-align: center'><b>Related Stories</b></p>" +
-                      "<p>" + properties['Story Type'] + "</p>"
-                    };
+                      "<p class='link' style='width: 100%; text-align: center'><a href='" + properties['Permanent Link'] + "'><b>View Story</b></a></p>"
+    //conditional loop to add related content to pop up if it exists            
+    let popUp = this
+    if(related.length > 0){
+        popUp.formatted += "<div class='related'><h3>Related Stories</h3><ul class='relatedLink'>"                 
+        related.forEach(function(link){
+            popUp.formatted += '<li>' + link + '</li>'
+        });
+    popUp.formated += '</ul></div>';
+    };
+};
 
 //function to filter the data based on the slider position
 function updateData(){

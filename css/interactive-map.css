@@ -106,6 +106,31 @@ unused visual affordance telling user about slider functionality
     cursor: pointer;
 }
 
+/*styling for the pop ups*/
+
+.link {
+    font-size: 10pt
+}
+
+.related {
+    font-size: 10pt;
+    background: #3fa3a351;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    padding-left: 3%;
+    padding-right: 3%;
+    border-radius: 10px;
+}
+
+.related h3 {
+    margin: 0;
+    text-align: center;
+}
+
+.relatedLink {
+    margin: 0 !important;
+}
+
 /*
 marker cluster styling - unused
 
