@@ -30,7 +30,7 @@ function createMap(){
     });
 
     //add the basemap layer
-    L.tileLayer('https://api.mapbox.com/styles/v1/jakesteinberg/ck0i9rn690a6r1cqpjs37sokh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamFrZXN0ZWluYmVyZyIsImEiOiJjanVtbzhwa2kxNTlsM3ltcXA0aGtiMDliIn0.2Q6HfVv2bholtzkLAhhHnw', {
+    L.tileLayer('https://api.mapbox.com/styles/v1/wisconsin101/cl5baod0r000v14pm50v3t69f/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoid2lzY29uc2luMTAxIiwiYSI6ImNsNTc4NzZ1djFvMDcza29jMHQxZDcxaHcifQ.QTim3-07ouxM87Qwzu_uRQ', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         subdomains: 'abcd'
     }).addTo(map);
